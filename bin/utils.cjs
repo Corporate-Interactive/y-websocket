@@ -220,11 +220,13 @@ const closeConn = (doc, conn) => {
     const controlledIds = doc.conns.get(conn)
     doc.conns.delete(conn)
     awarenessProtocol.removeAwarenessStates(doc.awareness, Array.from(controlledIds), null)
-    if (doc.conns.size === 0 && persistence !== null) {
+    if (doc.conns.size === 0) {
       // if persisted, we store state and destroy ydocument
-      persistence.writeState(doc.name, doc).then(() => {
-        doc.destroy()
-      })
+      if(persistence !== null) {
+        persistence.writeState(doc.name, doc).then(() => {
+          doc.destroy()
+        })
+      }
       docs.delete(doc.name)
     }
   }
